@@ -6,17 +6,31 @@ import shutil
 from optparse import OptionParser
 
 
+
+def check_argument(options, args):
+	"""Check Argument
+	"""
+	if len(args) > 0:
+		return False
+
+	if not( options.input_dir and options.output_dir):
+		return False
+
+	return True
+
+
 def fild_all_files(directory):
-	"""Return full path of specific directory"""
+	"""Return full path of specific directory
+	"""
 	for root, dirs, files in os.walk(directory):
 		yield root
 		for file in files:
 			yield os.path.join(root, file)
 
 
-if __name__ == '__main__':
-	""" main """
-
+def main():
+	""" Main Module
+	"""
 	# Add Option
 	parser = OptionParser()
 	parser.add_option(
@@ -34,33 +48,35 @@ if __name__ == '__main__':
 		help="Set Destination Directory"
 		)
 
-	# コマンドラインの解析
+	# Parse Argument
 	(options, args) = parser.parse_args()
-	print options, args
 
-	# コマンドライン引数のチェック
-	if len(args) > 0:
+	# Check Argument
+	if not check_argument(options, args):
 		parser.error(u"ERROR\tInvalid Argument.")
+		return -1
 
-	if not( options.input_dir and options.output_dir):
-		parser.error(u"ERROR\tInvalid Argument.")
+	# Get Argument
+	input_dir  = options.input_dir
+	output_dir = options.output_dir
 
-	# 引数取得
-	input_dir = options.input_dir
-	output_dir = options.input_dir
+	# Check directory path
+	dirs = [ input_dir, output_dir ]
+	for dir in dirs:		
+		if not os.path.isdir(dir):
+			print u"ERROR:\tDirectory is not exist. -> %s" % dir
+			return -1
 
-	# 引数チェック
-	if not os.path.isdir(input_dir):
-		print u"ERROR:\tDirectory is not exist. -> %s" % input_dir
-		exit()
-	if not os.path.isdir(output_dir):
-		print u"ERROR:\tDirectory is not exist. -> %s" % output_dir
-		exit()
-
+	# Copy files
 	for file in fild_all_files(input_dir):
 		# Get file extension
 		root, ext = os.path.splitext(file)
-		if ext != ".txt":
+		if ext != ".md":
 			continue
-		shutil.copy(file, OUT_DIR)
+		shutil.copy(file, output_dir)
 
+	return 0
+
+
+if __name__ == '__main__':
+	sys.exit(main())
