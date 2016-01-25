@@ -6,14 +6,13 @@ import shutil
 from optparse import OptionParser
 
 
-
 def check_argument(options, args):
 	"""Check Argument
 	"""
 	if len(args) > 0:
 		return False
 
-	if not( options.input_dir and options.output_dir):
+	if not( options.input_dir and options.output_dir and options.extension):
 		return False
 
 	return True
@@ -47,6 +46,13 @@ def main():
 		dest="output_dir",
 		help="Set Destination Directory"
 		)
+	parser.add_option(
+		"-e","--ext",
+		action="store",
+		type="string",
+		dest="extension",
+		help="Set Target Extension"
+		)
 
 	# Parse Argument
 	(options, args) = parser.parse_args()
@@ -59,21 +65,26 @@ def main():
 	# Get Argument
 	input_dir  = options.input_dir
 	output_dir = options.output_dir
+	extension = options.extension
 
 	# Check directory path
 	dirs = [ input_dir, output_dir ]
-	for dir in dirs:		
+	for dir in dirs:
 		if not os.path.isdir(dir):
 			print u"ERROR:\tDirectory is not exist. -> %s" % dir
 			return -1
 
 	# Copy files
+	count = 0
 	for file in fild_all_files(input_dir):
 		# Get file extension
 		root, ext = os.path.splitext(file)
-		if ext != ".md":
+		if ext != extension:
 			continue
 		shutil.copy(file, output_dir)
+		count = count + 1
+
+	print "INFO: Copy %d File" % count
 
 	return 0
 
