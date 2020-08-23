@@ -36,12 +36,27 @@ class Employee:
         return day.weekday() != 5 and day.weekday() != 6
 
 
+    # Special(Magic/Dunder) Methods
+    def __repr__(self):
+        return "'{}' '{}' {}".format(self.first, self.last, self.pay)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.fullname(), self.email, 'Employee')
+
+
+
 class Developer(Employee):
     raise_amt = 1.10
 
     def __init__(self, first, last ,pay, prog_lang):
         super().__init__(first, last, pay)
         self.prog_lang = prog_lang
+
+    def __repr__(self):
+        return "'{}' '{}' {} {}".format(self.first, self.last, self.pay, self.prog_lang)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.fullname(), self.email, 'Developer')
 
 class Manager(Employee):
     raise_amt = 1.10
@@ -52,6 +67,15 @@ class Manager(Employee):
             self.employees = []
         else:
             self.employees = employees
+
+    def __repr__(self):
+        emp_str = '\n'
+        for emp in self.employees:
+            emp_str += '-->' + emp.__repr__() + '\n'
+        return "'{}' '{}' {} {}".format(self.first, self.last, self.pay, emp_str)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.fullname(), self.email, 'Manager')
 
     def add_emp(self, emp):
         if emp not in self.employees:
@@ -69,16 +93,8 @@ class Manager(Employee):
 
 def main():
     dev_1 = Developer('Shotaro', 'Murakami', 50000, 'Python')
-    dev_2 = Developer('Test', 'Employee', 55000, 'C++')
-
-    mgr_1 = Manager('Sue', 'Smith', 90000, [dev_1])
-    mgr_1.print_emps()
-    print('---')
-    mgr_1.add_emp(dev_2)
-    mgr_1.print_emps()
-    print('---')
-    mgr_1.remove_emp(dev_1)
-    mgr_1.print_emps()
+    mgr_1 = Manager('Test', 'Emplyee', 80000, [dev_1])
+    print(mgr_1.__repr__())
 
 
 
