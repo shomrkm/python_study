@@ -10,16 +10,31 @@ class Employee:
     def __init__(self, first, last, pay):
         self.first = first
         self.last = last
-        self.email = first + '.' + last + '@email.com'
         self.pay = pay
 
         Employee.num_of_emps += 1
 
+    def apply_raise(self):
+        self.pay = int(self.pay * self.raise_amt)
+
+    @property
+    def email(self):
+        return '{}.{}@email.com'.format(self.first, self.last)
+
+    @property
     def fullname(self):
         return '{} {}'.format(self.first, self.last)
 
-    def apply_raise(self):
-        self.pay = int(self.pay * self.raise_amt)
+    @fullname.setter
+    def fullname(self, name):
+        first, last = name.split(' ')
+        self.first = first
+        self.last = last
+
+    @fullname.deleter
+    def fullname(self):
+        self.first = None
+        self.last = None
 
     @classmethod
     def set_raise_amt(cls, amt):
@@ -34,7 +49,6 @@ class Employee:
     @staticmethod
     def is_workday(day):
         return day.weekday() != 5 and day.weekday() != 6
-
 
     # Special(Magic/Dunder) Methods
     def __repr__(self):
@@ -57,6 +71,7 @@ class Developer(Employee):
 
     def __str__(self):
         return '{} - {} - {}'.format(self.fullname(), self.email, 'Developer')
+
 
 class Manager(Employee):
     raise_amt = 1.10
@@ -93,8 +108,15 @@ class Manager(Employee):
 
 def main():
     dev_1 = Developer('Shotaro', 'Murakami', 50000, 'Python')
-    mgr_1 = Manager('Test', 'Emplyee', 80000, [dev_1])
+    mgr_1 = Manager('Test', 'Employee', 80000, [dev_1])
     print(mgr_1.__repr__())
+
+    dev_1.fullname = 'Hitomi Murakami'
+    print(dev_1.fullname)
+    del dev_1.fullname
+
+    person = Employee('Yasuyuki', 'Chinen', 10000)
+    print(person.fullname)
 
 
 
