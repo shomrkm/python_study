@@ -2,6 +2,14 @@
 
 import itertools
 
+# itertools の機能を大きく分類すると3つ
+# - イテレータをつなげて使う
+# - 要素をふるい分ける
+# - 要素の組み合わせを作る
+
+
+# イテレータをつなげて使う
+
 # chain
 # 複数のイテレータを組み合わせて1つのシーケンスにする
 it = itertools.chain([1, 2, 3], [4, 5, 6])
@@ -35,6 +43,9 @@ print('zip: ', normal)
 it = itertools.zip_longest(keys, values, fillvalue='nope')
 longest = list(it)
 print('zip_longest: ', longest)
+
+
+# 要素をふるい分ける
 
 # islice
 # 複製せず、インデックスでイテレータをスライスする
@@ -71,6 +82,9 @@ print('Filter:       ', list(filter_result))
 
 filter_false_result = itertools.filterfalse(evens, values)
 print('Filter false: ', list(filter_false_result))
+
+
+# 要素の組み合わせを作る
 
 # accumulate
 # 2引数関数をイテレータの返す値に適用していき進行値を作る
