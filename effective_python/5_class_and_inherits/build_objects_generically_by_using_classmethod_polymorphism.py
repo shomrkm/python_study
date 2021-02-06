@@ -1,5 +1,9 @@
 # -*- coding:utf-8 -*-
 
+# - Python ではクラスに対して、__init__ という1つのコンストラクタしかサポートしていない
+# - クラスに対して代わりのコンストラクタを定義するためには、@classmethod を使う
+# - 具象サブクラスを作成して連携するジェネリックな方式を提供するには、クラスメソッドポリモルフィズムを使う
+
 import os
 import shutil
 from threading import Thread
