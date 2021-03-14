@@ -1,7 +1,12 @@
 # -*- coding:utf-8 -*-
 
+# - 値が他の辞書や長いタプルや他の組み込み型の複雑な入れ子である辞書は作らない
+# - 完全なクラスの柔軟性が必要となる前は、軽量で変更不能なデータコンテナである namedtuple を使う
+# - 内部状態辞書が複雑になったら、記録管理コードを複数のヘルパークラスを使うように変更する
+
 from collections import defaultdict
 
+# 深い入れ子の例
 class WeightedGradebook:
     def __init__(self):
         self._grades = {}
@@ -40,6 +45,7 @@ print(book.averave_grade('Albert Einstein'))
 
 
 ########################################
+# クラスを使ってリファクタリング例
 
 from collections import namedtuple
 

@@ -18,6 +18,11 @@ class InputData:
 
 
 class PathInputData(InputData):
+    ''' 入力データを扱うクラス
+    Attributes:
+        path(str): 入力データパス
+    '''
+
     def __init__(self, path):
         super().__init__()
         self.path = path
@@ -34,6 +39,11 @@ class PathInputData(InputData):
 
 
 class Worker:
+    ''' 処理クラス
+    Attributes:
+        input_data(InputData): 入力データ
+        result: 処理結果
+    '''
     def __init__(self, input_data):
         self.input_data = input_data
         self.result = None
@@ -53,13 +63,14 @@ class Worker:
 
 
 class LineCountWorker(Worker):
+    ''' データの改行数をカウントするサブクラス
+    '''
     def map(self):
         data = self.input_data.read()
         self.result = data.count('\n')
 
     def reduce(self, other):
         self.result += other.result
-
 
 
 def execute(workers):
@@ -71,7 +82,6 @@ def execute(workers):
     for worker in rest:
         first.reduce(worker)
     return first.result
-
 
 def mapreduce(worker_class, input_class, config):
     workers = worker_class.create_workers(input_class, config)
@@ -89,10 +99,19 @@ def write_test_files(tmp_dir):
         with open(os.path.join(tmp_dir, str(i)), 'w') as f:
             f.write('\n' * random.randint(0, 100))
 
-
+# テストデータ準備
 tmpdir = 'test_input'
 config = {'data_dir': tmpdir}
 write_test_files(tmpdir)
+# MapReduce 実行
 result = mapreduce(LineCountWorker, PathInputData, config)
 print(f'There are {result} lines')
+# テストデータ削除
 shutil.rmtree(tmpdir)
+
+
+
+# Note:
+#  MapReduce:
+#    データを効率的に分散処理するためのプログラミングモデル。
+#    Map で処理し、Reduce で結果を集約する
